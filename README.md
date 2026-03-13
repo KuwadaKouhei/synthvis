@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SynthVis
 
-## Getting Started
+リアルタイム音楽ビジュアライザー。音楽ファイルをアップロード、マイク入力、またはデモ楽曲を選択すると、音の周波数・ビート・波形に連動した3Dビジュアルがリアルタイムに生成されます。
 
-First, run the development server:
+**このアプリケーションはClaudeCodeを用いたAI駆動開発で行っております。**
+
+## デモ
+
+[synthvis.vercel.app](https://synthvis.vercel.app)
+
+## 技術スタック
+
+- **フレームワーク**: Next.js 16 (App Router / Turbopack)
+- **言語**: TypeScript (strict mode)
+- **3D描画**: React Three Fiber + drei
+- **シェーダー**: カスタム GLSL (vertex / fragment)
+- **状態管理**: Zustand
+- **UIアニメーション**: Framer Motion
+- **スタイリング**: Tailwind CSS v4
+- **音声解析**: Web Audio API (AnalyserNode)
+
+## 機能
+
+- **音声入力** — ファイルアップロード（D&D対応）/ マイク入力 / デモ楽曲
+- **3つのビジュアルモード** — Particle / Warp / Landscape（キーボード 1・2・3 で切替）
+- **リアルタイム解析** — FFT周波数帯分離（低/中/高）、BPM検出、ボリュームメーター
+- **パラメータ調整** — Intensity / Speed / Color Shift / Complexity
+- **レスポンシブ対応** — モバイル・デスクトップ両対応
+- **フルスクリーン** — ブラウザフルスクリーンAPI対応
+
+## ビジュアルモード
+
+- **Particle** — 3000個のパーティクルがGLSLシェーダーで駆動。低音でY膨張、中音でX揺れ、高音でZ散乱
+- **Warp** — Icosahedronをsimplex noiseで変形。ビート検出時にパルス的に膨張
+- **Landscape** — PlaneGeometryの頂点をPerlinノイズ+音声データで変位させたワイヤーフレーム地形
+
+## ローカル開発
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<http://localhost:3000> でアクセスできます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### その他のコマンド
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm build        # プロダクションビルド
+pnpm lint         # ESLint実行
+```
 
-## Learn More
+## プロジェクト構成
 
-To learn more about Next.js, take a look at the following resources:
+```text
+src/
+├── app/                     # Next.js App Router
+├── components/
+│   ├── canvas/              # 3Dシーン・ビジュアルモード・GLSLシェーダー
+│   └── ui/                  # UIコンポーネント（ControlPanel, BottomNav等）
+├── hooks/                   # useAudioAnalyser, useBeatDetection, useVisualizerStore
+├── lib/                     # 音声解析・数学ユーティリティ
+└── types/                   # 型定義
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ライセンス
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+MIT
 
-## Deploy on Vercel
+## デモ楽曲クレジット
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+デモ楽曲は [Bensound](https://www.bensound.com/) より使用しています。
